@@ -1,0 +1,81 @@
+<head>
+    <script src='js/virtualjoystick.js'></script>
+    <title>Robot Control</title>
+    <link rel = "stylesheet" type = "text/css" href = "css/index.css" />
+</head>
+<body>
+    <div id="container">
+        <span id="result"></span>
+    </div>
+    <script>
+        var prevPacket = "";
+        var socket = new WebSocket('ws://localhost:9999');
+
+        var joystick	= new VirtualJoystick({
+            container	: document.getElementById('container'),
+            mouseSupport	: true,
+        });
+
+        function convertJoyStickToLimitedPolarCoords(x, y){
+                    distance = Math.round((Math.sqrt(x*x + y*y)))
+                    if(distance > 100) {
+                        distance = 100;
+                    }
+                    angle = Math.round((Math.atan2(y,x) * (180/Math.PI)+1)/10)*10*-1
+                    data = distance + "|" + angle
+                    return data;
+                };
+        
+        /* Every 20ms the joystick position is checked and if changed, sent to the python3 WebSocketServer */
+        setInterval(function(){
+            var JoyStickPosition = convertJoyStickToLimitedPolarCoords(joystick.deltaX(),joystick.deltaY());
+
+            if(JoyStickPosition != prevPacket) {
+                console.log(JoyStickPosition)
+                socket.send(JoyStickPosition)
+                prevPacket = JoyStickPosition
+            }
+        }, 20);
+
+        /* Added additional keyboard controls for PC users */
+        document.addEventListener("keypress", function onEvent(event) {
+            if (event.key === "a") {
+                packet = "100|-180"
+                if(packet != prevPacket) {
+                    socket.send(packet)
+                    console.log(packet)
+                    prevPacket = packet
+                }
+                
+            }
+            else if (event.key === "d") {
+                packet = "100|0"
+                if(packet != prevPacket) {
+                    socket.send(packet)
+                    console.log(packet)
+                    prevPacket = packet
+                }
+            }
+            else if (event.key === "w") {
+                packet = "100|90"
+                if(packet != prevPacket) {
+                    socket.send(packet)
+                    console.log(packet)
+                    prevPacket = packet
+                }
+            }
+            else if (event.key === "s") {
+                packet = "100|-90"
+                if(packet != prevPacket) {
+                    socket.send(packet)
+                    console.log(packet)
+                    prevPacket = packet
+                }
+            }
+        });
+
+    </script>
+    <div id="camera_feed">
+
+    </div>
+</body>
