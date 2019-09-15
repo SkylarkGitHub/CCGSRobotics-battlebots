@@ -74,5 +74,5 @@ class RobotServer(WebSocket):
         print('Client', self.address, 'Closed.')
 
 # The websocket server is setup on port 9999 on the default address, in this case 192.168.100.1
-server = WebSocketServer('localhost', 9999, RobotServer)
+server = WebSocketServer('', 9999, RobotServer)
 server.serve_forever()

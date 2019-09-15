@@ -15,6 +15,6 @@ app.use('/images', express.static(__dirname + '/public/images'));
     The server is setup on port 80, the default webpage TCP port. 
     The server address is left blank, and defaults to 192.168.100.1.
 */
-var server = app.listen(80, 'localhost', function(){
+var server = app.listen(80, '', function(){
     console.log("Server started at %s:%s", server.address().address, server.address().port);
 });
