@@ -27,6 +27,8 @@
                     return data;
                 };
         
+        
+
         /* Every 20ms the joystick position is checked and if changed, sent to the python3 WebSocketServer */
         setInterval(function(){
             var JoyStickPosition = convertJoyStickToLimitedPolarCoords(joystick.deltaX(),joystick.deltaY());
@@ -79,6 +81,7 @@
                     prevPacket = packet
                 }
             }
+            
         });
 
     </script>

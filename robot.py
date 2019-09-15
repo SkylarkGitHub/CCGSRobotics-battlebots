@@ -28,23 +28,25 @@ class RobotServer(WebSocket):
 
                 # Uses the angle of the joystick to calculate the "true" speeds of the wheels.
                 if baseAngle > 90:
-                    leftWheelSpeed = int(baseSpeed * abs(math.sin(baseAngle)))
-                    rightWheelSpeed = baseSpeed
+                    leftWheelSpeed = baseSpeed
+                    rightWheelSpeed = int(baseSpeed * abs(math.sin(baseAngle)))
 
                 elif baseAngle < 90:
-                    rightWheelSpeed = int(baseSpeed * abs(math.sin(baseAngle)))
-                    leftWheelSpeed = baseSpeed
+                    rightWheelSpeed = baseSpeed
+                    leftWheelSpeed = int(baseSpeed * abs(math.sin(baseAngle)))
 
                 else:
-                    rightWheelSpeed = int(baseSpeed * abs(math.sin(baseAngle)))
-                    leftWheelSpeed = baseSpeed
+                    rightWheelSpeed = baseSpeed
+                    leftWheelSpeed = baseSpeed 
+
+                leftWheelSpeed * -1
 
                 # Moves the wheels according to the calculated speed.
                 moveWheel(robot["front_left_wheel"], leftWheelSpeed)
                 moveWheel(robot["back_left_wheel"], leftWheelSpeed)
 
-                moveWheel(robot["front_left_wheel"], rightWheelSpeed)
-                moveWheel(robot["back_left_wheel"], rightWheelSpeed)
+                moveWheel(robot["front_right_wheel"], rightWheelSpeed)
+                moveWheel(robot["back_right_wheel"], rightWheelSpeed)
 
             #print(baseSpeed,baseAngle)
 
