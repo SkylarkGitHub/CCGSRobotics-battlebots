@@ -28,7 +28,7 @@ class RobotServer(WebSocket):
 
                 # Uses the angle of the joystick to calculate the "true" speeds of the wheels.
                 if baseAngle > 90:
-                    leftWheelSpeed = int(baseSpeed * abs(math.sin(baseAngle))))
+                    leftWheelSpeed = int(baseSpeed * abs(math.sin(baseAngle)))
                     rightWheelSpeed = baseSpeed
 
                 elif baseAngle < 90:
