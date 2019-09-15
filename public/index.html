@@ -9,6 +9,7 @@
     </div>
     <script>
         var prevPacket = "";
+        var keyboardControls = false;
         var socket = new WebSocket('ws://192.168.100.1:9999');
 
         var joystick	= new VirtualJoystick({
@@ -29,17 +30,20 @@
         /* Every 20ms the joystick position is checked and if changed, sent to the python3 WebSocketServer */
         setInterval(function(){
             var JoyStickPosition = convertJoyStickToLimitedPolarCoords(joystick.deltaX(),joystick.deltaY());
-
-            if(JoyStickPosition != prevPacket) {
+            if(JoyStickPosition != prevPacket && keyboardControls == false) {
                 console.log(JoyStickPosition)
                 socket.send(JoyStickPosition)
                 prevPacket = JoyStickPosition
+            }
+            if(JoyStickPosition != "0|0") {
+                keyboardControls = false;
             }
         }, 20);
 
         /* Added additional keyboard controls for PC users */
         document.addEventListener("keypress", function onEvent(event) {
             if (event.key === "a") {
+                keyboardControls = true;
                 packet = "100|-180"
                 if(packet != prevPacket) {
                     socket.send(packet)
@@ -49,6 +53,7 @@
                 
             }
             else if (event.key === "d") {
+                keyboardControls = true;
                 packet = "100|0"
                 if(packet != prevPacket) {
                     socket.send(packet)
@@ -57,6 +62,7 @@
                 }
             }
             else if (event.key === "w") {
+                keyboardControls = true;
                 packet = "100|90"
                 if(packet != prevPacket) {
                     socket.send(packet)
@@ -65,6 +71,7 @@
                 }
             }
             else if (event.key === "s") {
+                keyboardControls = true;
                 packet = "100|-90"
                 if(packet != prevPacket) {
                     socket.send(packet)
