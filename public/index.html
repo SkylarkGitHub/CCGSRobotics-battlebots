@@ -9,7 +9,7 @@
     </div>
     <script>
         var prevPacket = "";
-        var socket = new WebSocket('ws://localhost:9999');
+        var socket = new WebSocket('ws://192.168.100.1:9999');
 
         var joystick	= new VirtualJoystick({
             container	: document.getElementById('container'),
@@ -17,7 +17,7 @@
         });
 
         function convertJoyStickToLimitedPolarCoords(x, y){
-                    distance = Math.round((Math.sqrt(x*x + y*y)))
+                    distance = Math.round((Math.sqrt(x*x + y*y))/10)*10
                     if(distance > 100) {
                         distance = 100;
                     }
@@ -76,6 +76,6 @@
 
     </script>
     <div id="camera_feed">
-
+        <iframe id="camera_connection" src="192.168.100.1:25565"></iframe>
     </div>
 </body>

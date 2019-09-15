@@ -19,16 +19,16 @@ if robot["name"] == "battlebot":
 class RobotServer(WebSocket):
     def handle(self):
         try:
-            baseSpeed, baseAngle = self.data.split("|")
+            baseSpeed, baseAngle = map(int, self.data.split("|"))
             if robot["name"] == "battlebot":
                 # Converts negative angles into positive angles, and sets the base speed to be backwards
                 if baseAngle < 0:
-                    baseSpeed = baseSpeed * -1
-                    baseAngle = abs(baseAngle)
+                    baseSpeed = int(baseSpeed * -1)
+                    baseAngle = int(abs(baseAngle))
 
                 # Uses the angle of the joystick to calculate the "true" speeds of the wheels.
                 if baseAngle > 90:
-                    leftWheelSpeed = int(baseSpeed * abs(math.sin(baseAngle)))
+                    leftWheelSpeed = int(baseSpeed * abs(math.sin(baseAngle))))
                     rightWheelSpeed = baseSpeed
 
                 elif baseAngle < 90:
@@ -46,7 +46,7 @@ class RobotServer(WebSocket):
                 moveWheel(robot["front_left_wheel"], rightWheelSpeed)
                 moveWheel(robot["back_left_wheel"], rightWheelSpeed)
 
-            print(baseSpeed,baseAngle)
+            #print(baseSpeed,baseAngle)
 
         except Exception as e:
             print(e)
