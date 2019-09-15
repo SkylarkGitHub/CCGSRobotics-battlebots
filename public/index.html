@@ -8,83 +8,133 @@
         <span id="result"></span>
     </div>
     <script>
-        var prevPacket = "";
-        var keyboardControls = false;
-        var socket = new WebSocket('ws://192.168.100.1:9999');
 
-        var joystick	= new VirtualJoystick({
-            container	: document.getElementById('container'),
-            mouseSupport	: true,
+        /* 
+            Setup of variables required for the logical operation of the tracking 
+            of user input through a keyboard and a virtual joystick. 
+        */
+
+        var prevPacket;
+        var JoyStickPacket;
+        var keyboardControls = false;
+        var isJoystickActive;
+        var socket = new WebSocket('ws://localhost:9999');
+        
+        var keys = { 'forward': false, 'left': false, 'backward': false, 'right': false}
+
+        // A "VirtualJoystick" object is created.
+        var joystick = new VirtualJoystick({
+            container   : document.getElementById('container'),
+            mouseSupport: true,
         });
 
+        /* 
+            Setup of functions that send and manipulate data "sendPacket(packet)", 
+            "convertJoyStickToLimitedPolarCoords(x,y)", "checkJoystick()" and "checkKeyboard()".
+        */
+
+        // sendPacket(packet) will send a packet along the websocket, provided it doesn't match the previous data. 
+        // This prevents the websocket being clogged with unnecessary data packets.
+        function sendPacket(packet){
+            if(packet != prevPacket) {
+                console.log(packet)
+                socket.send(packet)
+                prevPacket = packet
+            }
+        }
+        
+        // used to convert the x & y coordinates from the VirtualJoystick Object into a polar form (distance, angle).
         function convertJoyStickToLimitedPolarCoords(x, y){
-                    distance = Math.round((Math.sqrt(x*x + y*y))/10)*10
-                    if(distance > 100) {
-                        distance = 100;
-                    }
-                    angle = Math.round((Math.atan2(y,x) * (180/Math.PI)+1)/10)*10*-1
-                    data = distance + "|" + angle
-                    return data;
-                };
-        
-        
+            distance = Math.round((Math.sqrt(x*x + y*y))/10)*10
+            if(distance > 100) {
+                distance = 100;
+            }
+            angle = Math.round((Math.atan2(y,x) * (180/Math.PI)+1)/10)*10*-1
+            data = distance + "|" + angle
+            return data;
+        };
 
-        /* Every 20ms the joystick position is checked and if changed, sent to the python3 WebSocketServer */
+        // Checks to see if the joystick in is action, by checking if the polar form contains 0 speed and 0 direction (angle).
+        function checkJoystick() {
+            JoyStickPacket = convertJoyStickToLimitedPolarCoords(joystick.deltaX(),joystick.deltaY());
+            if(JoyStickPacket == "0|0") {
+                return false
+            } 
+            else {
+                return true
+            }
+        }
+        
+        // Checks if any of the keys in the "keys" dictionary is set to true, and tries to send a packet if a key is set to true.
+        function checkKeyboard(){
+            var keyboardPacket;
+            if(keys.forward == true) {
+                keyboardPacket = "100|90"
+            }
+            else if(keys.backward == true) {
+                keyboardPacket = "100|-90"
+            }
+            else if(keys.left == true) {
+                keyboardPacket = "100|180"
+            }
+            else if(keys.right == true) {
+                keyboardPacket = "100|0"
+            }
+            else {
+                keyboardPacket = "0|0"
+            }
+            sendPacket(keyboardPacket)
+        }
+
+        /* 
+            Every 25ms (1000/40) the joystick and keyboard is checked for updates,
+            and new packets are sent to the server when new input is found. 
+        */
         setInterval(function(){
-            var JoyStickPosition = convertJoyStickToLimitedPolarCoords(joystick.deltaX(),joystick.deltaY());
-            if(JoyStickPosition != prevPacket && keyboardControls == false) {
-                console.log(JoyStickPosition)
-                socket.send(JoyStickPosition)
-                prevPacket = JoyStickPosition
+            if(checkJoystick()) {
+                sendPacket(JoyStickPacket)
             }
-            if(JoyStickPosition != "0|0") {
-                keyboardControls = false;
+            else {
+                checkKeyboard()
             }
-        }, 20);
+        }, 40);
 
-        /* Added additional keyboard controls for PC users */
-        document.addEventListener("keypress", function onEvent(event) {
-            if (event.key === "a") {
-                keyboardControls = true;
-                packet = "100|-180"
-                if(packet != prevPacket) {
-                    socket.send(packet)
-                    console.log(packet)
-                    prevPacket = packet
-                }
-                
+        /* 
+            Added additional keyboard controls for PC users, with both WASD and arrow key controls.
+            Two event listeners, one for "keydown" and another for "keyup", are used to set the state
+            of a "key" in the "keys" dictionary, which dictate what packets are sent to the server.
+        */
+        document.addEventListener("keydown", function onEvent(event) {
+            if (event.key === "a" || event.key === "ArrowLeft") {
+                keys.left = true
             }
-            else if (event.key === "d") {
-                keyboardControls = true;
-                packet = "100|0"
-                if(packet != prevPacket) {
-                    socket.send(packet)
-                    console.log(packet)
-                    prevPacket = packet
-                }
+            else if (event.key === "d" || event.key === "ArrowRight") {
+                keys.right = true
             }
-            else if (event.key === "w") {
-                keyboardControls = true;
-                packet = "100|90"
-                if(packet != prevPacket) {
-                    socket.send(packet)
-                    console.log(packet)
-                    prevPacket = packet
-                }
+            else if (event.key === "w" || event.key === "ArrowUp") {
+                keys.forward = true
             }
-            else if (event.key === "s") {
-                keyboardControls = true;
-                packet = "100|-90"
-                if(packet != prevPacket) {
-                    socket.send(packet)
-                    console.log(packet)
-                    prevPacket = packet
-                }
+            else if (event.key === "s" || event.key === "ArrowDown") {
+                keys.backward = true
             }
-            
+        });
+        document.addEventListener("keyup", function onEvent(event) {
+            if (event.key === "a" || event.key === "ArrowLeft") {
+                keys.left = false
+            }
+            else if (event.key === "d" || event.key === "ArrowRight") {
+                keys.right = false
+            }
+            else if (event.key === "w"|| event.key === "ArrowUp") {
+                keys.forward = false
+            }
+            else if (event.key === "s" || event.key === "ArrowDown") {
+                keys.backward = false
+            }
         });
 
     </script>
+
     <div id="camera_feed">
         <iframe id="camera_connection" src="192.168.100.1:25565"></iframe>
     </div>
