@@ -1,5 +1,5 @@
 from simple_websocket_server import WebSocketServer, WebSocket
-#from functions import *
+from functions import *
 import math
 
 robot = {
