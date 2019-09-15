@@ -5,7 +5,6 @@
 </head>
 <body>
     <div id="container">
-        <span id="result"></span>
     </div>
     <script>
 
@@ -33,7 +32,7 @@
             "convertJoyStickToLimitedPolarCoords(x,y)", "checkJoystick()" and "checkKeyboard()".
         */
 
-        // sendPacket(packet) will send a packet along the websocket, provided it doesn't match the previous data. 
+        // "sendPacket(packet)" will send a packet along the websocket, provided it doesn't match the previous data. 
         // This prevents the websocket being clogged with unnecessary data packets.
         function sendPacket(packet){
             if(packet != prevPacket) {
@@ -43,7 +42,7 @@
             }
         }
         
-        // used to convert the x & y coordinates from the VirtualJoystick Object into a polar form (distance, angle).
+        // Used to convert the x & y coordinates from the VirtualJoystick Object into a polar form (distance, angle).
         function convertJoyStickToLimitedPolarCoords(x, y){
             distance = Math.round((Math.sqrt(x*x + y*y))/10)*10
             if(distance > 100) {
