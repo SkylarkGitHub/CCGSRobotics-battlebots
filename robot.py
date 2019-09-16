@@ -5,10 +5,10 @@ import math
 # The robot is setup as a battlebot, with the wheels in their respective positions.
 robot = {
     "name": "battlebot",
-    "front_left_wheel": 1,
-    "front_right_wheel": 3,
-    "back_left_wheel": 2,
-    "back_right_wheel": 4,
+    "front_left_wheel": 3,
+    "front_right_wheel": 2,
+    "back_left_wheel": 4,
+    "back_right_wheel": 1,
 }
 
 # if the robot is named "battlebot", the wheels are setup using the wheelMode("servo id") function.
@@ -48,7 +48,7 @@ class RobotServer(WebSocket):
 
                 # Since the servos are set to spin the same direction, the left wheels are set to spin backwards to maintain the 
                 # direction of the robot, as the servos on one side are flipped.
-                leftWheelSpeed *= -1
+                rightWheelSpeed *= -1
 
                 # Moves the four wheels according to the new, calculated speeds.
                 moveWheel(robot["front_left_wheel"], leftWheelSpeed)
@@ -73,6 +73,6 @@ class RobotServer(WebSocket):
     def handle_close(self):
         print('Client', self.address, 'Closed.')
 
-# The websocket server is setup on port 9999 on the default address, in this case 192.168.100.1
+# The websocket server is setup on port 9999 on the default address, in this case "192.168.100.1"
 server = WebSocketServer('', 9999, RobotServer)
 server.serve_forever()
