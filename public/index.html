@@ -86,7 +86,7 @@
         }
 
         /* 
-            Every 25ms (1000/40) the joystick and keyboard is checked for updates,
+            Every 25ms the joystick and keyboard is checked for updates,
             and new packets are sent to the server when new input is found. 
         */
         setInterval(function(){
@@ -96,7 +96,7 @@
             else {
                 checkKeyboard()
             }
-        }, 40);
+        }, 25);
 
         /* 
             Added additional keyboard controls for PC users, with both WASD and arrow key controls.
