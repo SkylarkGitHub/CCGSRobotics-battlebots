@@ -9,13 +9,17 @@ servo_connection.flush()
 # === JOINT FUNCTIONS === #
 
 # Set up a dynamixel so that it behaves like joint.
-def jointMode(ID):
-        servo_connection.set_cw_angle_limit(ID,0,False)
-        servo_connection.set_ccw_angle_limit(ID,1023,False)
+def jointMode(ID, lowerLimit, upperLimit):
+        servo_connection.set_cw_angle_limit(ID,lowerLimit,False)
+        servo_connection.set_ccw_angle_limit(ID,upperLimit,False)
 
 # Move a dynamixel that has been set up as a joint.
-def moveJoint(ID, position, speed):
-        servo_connection.goto(int(ID), int(position), int(speed), False)
+def moveJointWithChange(ID, change):
+        change = change / (ID*100)
+        if change < 0 and servo_connection.get_cw_angle_limit < servo_connection.get_present_position(ID) + change:
+                servo_connection.goto(int(ID), servo_connection.get_present_position(ID) + change)
+        if change > 0 and servo_connection.get_ccw_angle_limit > servo_connection.get_present_position(ID) + change:
+                servo_connection.goto(int(ID), servo_connection.get_present_position(ID) + change)
 
 # === WHEEL FUNCTIONS === #
 
