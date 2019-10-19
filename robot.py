@@ -27,6 +27,9 @@ elif robot["name"] == "emobot":
     wheelMode(robot["front_right_wheel"])
     wheelMode(robot["back_left_wheel"])
     wheelMode(robot["back_right_wheel"])
+    jointMode(robot["shoulder"],768,1023)
+    jointMode(robot["shoulder"],256,512)
+    jointMode(robot["shoulder"],256,512)
 
 class RobotServer(WebSocket):
     def handle(self):
