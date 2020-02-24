@@ -7,3 +7,4 @@ sudo -H pip3 install simple-websocket-server
 sudo -H pip3 install pyax12
 sudo apt-get install motion
 sudo modprobe bcm2835-v4l2
+sudo chown motion:motion /var/lib/motion
