@@ -12,16 +12,17 @@ for servo in robot.servos:
 
 class RobotServer(WebSocket):
     def handle(self):
+        print(self.data)
         # a try statement is used to prevent a data processing error from crashing the program.
         try:
             print(self.data)
             if "Joint:" in self.data:
-                servoName, changeValue = self.data.split(",").replace("Joint: ")
+                servoName, changeValue = self.data.split(",").replace("Joint: ","")
                 print(servoName,changeValue)
 
             elif "Wheels: " in self.data:
                 # The baseSpeed and baseAngle are read from the incoming packet from the websocket client.
-                baseSpeed, baseAngle = map(int, self.data.split(",").replace("Wheels: "))
+                baseSpeed, baseAngle = map(int, self.data.split(",").replace("Wheels: ",""))
                 print(baseSpeed, baseAngle)
                 if baseAngle < 0:
                     baseSpeed = baseSpeed * -1
@@ -66,6 +67,6 @@ class RobotServer(WebSocket):
     def handle_close(self):
         print('Client', self.address, 'Closed.')
 
-# The websocket server is setup on port 9999 on the default address, in this case "192.168.100.1"
+# The websocket server is setup on port 9999 on the default address
 server = WebSocketServer('', 9999, RobotServer)
 server.serve_forever()
