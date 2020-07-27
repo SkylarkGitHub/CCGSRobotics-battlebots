@@ -26,24 +26,24 @@ class Servo:
     # === JOINT FUNCTIONS === #
 
     # Set up a dynamixel so that it behaves like joint.
-    def jointMode():
+    def jointMode(self):
             servo_connection.set_cw_angle_limit(self.ID,self.model.cw_angle_limit,False)
             servo_connection.set_ccw_angle_limit(self.ID,self.model.ccw_angle_limit,False)
 
     # Move a dynamixel that has been set up as a joint.
-    def moveJoint(position):
+    def moveJoint(self, position):
             mappedPosition = scaleValues(position, [0, 100], [self.model.cw_angle_limit, self.model.ccw_angle_limit])
             servo_connection.goto(int(self.ID), int(mappedPosition), 100, False)
 
     # === WHEEL FUNCTIONS === #
 
     # Set up a dynamixel so that it behaves like wheel.
-    def wheelMode():
+    def wheelMode(self):
             servo_connection.set_ccw_angle_limit(self.ID,0,False)
             servo_connection.set_cw_angle_limit(self.ID,0,False)
 
     # Move a dynamixel that has been set up as a wheel.
-    def moveWheel(speed):
+    def moveWheel(self, speed):
             mappedSpeed = scaleValues(speed, [-100, 100], 0, 2047)
                     
             servo_connection.flush()
