@@ -4,3 +4,5 @@ sudo apt-get install npm
 npm install express
 sudo -H pip3 install simple-websocket-server
 sudo -H pip3 install pyax12
+git clone https://github.com/silvanmelchior/RPi_Cam_Web_Interface.git
+./RPi_Cam_Web_Interface/install.sh
