@@ -19,10 +19,8 @@ class RobotServer(WebSocket):
                 print(servoName,changeValue)
 
             elif "Wheels," in self.data:
-                print(self.data)
                 # The baseSpeed and baseAngle are read from the incoming packet from the websocket client.
                 baseSpeed, baseAngle = map(int, self.data.replace("Wheels,","").split(","))
-                print(baseSpeed, baseAngle)
                 if baseAngle < 0:
                     baseSpeed = baseSpeed * -1
                     baseAngle = abs(baseAngle)
