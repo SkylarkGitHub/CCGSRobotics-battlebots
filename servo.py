@@ -44,18 +44,18 @@ class Servo:
 
     # Move a dynamixel that has been set up as a wheel.
     def moveWheel(self, speed):
-            speed = (speed) * 1023 / 100
+            mappedSpeed = (speed) * 1023 / 100
 
-            if speed < 0:
+            if mappedSpeed < 0:
                 # Limit allowed reverse speed to prevent errors
-                if speed < -1024:
-                    speed = 2047
+                if mappedSpeed < -1024:
+                    mappedSpeed = 2047
                 else:
-                    speed = 1023 - speed
+                    mappedSpeed = 1023 - mappedSpeed
             else:
-                if speed > 1023:
+                if mappedSpeed > 1023:
                     # Limit allowed forward speed to prevent errors
-                    speed = 1023
+                    mappedSpeed = 1023
                         
             servo_connection.flush()
             servo_connection.goto(int(self.ID), 0, int(mappedSpeed), degrees=False)
