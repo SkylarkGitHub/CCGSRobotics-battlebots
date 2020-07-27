@@ -48,7 +48,7 @@ function calculateMovementPacket(){
 
     packet = convertJoyStickToLimitedPolarCoords(xSum,ySum)
     
-    return "Wheels: " + packet.distance + "," + packet.angle
+    return "Wheels," + packet.distance + "," + packet.angle
 }
 
 // "sendPacket(packet)" will send a packet along the websocket, provided it doesn't match the previous data. 
