@@ -7,7 +7,7 @@ def scaleValues(self, val, src, dst):
     """
     Scale the given value from the scale of src to the scale of dst.
     """
-    return ((val - src[0]) / (src[1]-src[0])) * (dst[1]-dst[0]) + dst[0]
+    return ((val - src[0]) / (src[1]-src[0])) * (dst[1]-dst[0]) + dst[0])
 
 class ServoModel:
     def __init__(self, modelName, cw_angle_limit, ccw_angle_limit):
@@ -44,7 +44,7 @@ class Servo:
 
     # Move a dynamixel that has been set up as a wheel.
     def moveWheel(self, speed):
-            mappedSpeed = scaleValues(speed, [-100, 100], 0, 2047)
+            mappedSpeed = scaleValues(speed, [-100, 100], [0, 2047])
                     
             servo_connection.flush()
             servo_connection.goto(int(self.ID), 0, int(mappedSpeed), degrees=False)
