@@ -50,5 +50,5 @@ class Servo:
             servo_connection.goto(int(self.ID), 0, int(mappedSpeed), degrees=False)
 
         
-ax12a = new ServoModel("ax-12a", 0, 1023)
-ax18a = new ServoModel("ax-18a", 0, 1023)
+ax12a = ServoModel("ax-12a", 0, 1023)
+ax18a = ServoModel("ax-18a", 0, 1023)
