@@ -14,7 +14,7 @@ class RobotServer(WebSocket):
     def handle(self):
         # a try statement is used to prevent a data processing error from crashing the program.
         try:
-
+            print(self.data)
             if "Joint:" in self.data:
                 servoName, changeValue = self.data.split(",").replace("Joint: ")
                 print(servoName,changeValue)
