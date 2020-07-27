@@ -10,6 +10,9 @@
     <script src='js/joint_controls.js'></script>
 
     <div id="camera_feed">
-        <iframe id="camera_connection" src="http://"+location.hostname+":25565/html/"></iframe>
+        <iframe id="camera_connection" src="http://+location.hostname+:25565/html"></iframe>
+        <script>
+        document.getElementById("camera_connection").src = "http://"+location.hostname+":25565/html/";
+        </script> 
     </div>
 </body>
