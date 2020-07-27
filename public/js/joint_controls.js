@@ -8,7 +8,7 @@ function joint(jointName) {
 
 
     this.sendPacket = function () {
-        sendPacket("Joint: '" + this.name + "', " + this.changeValue)
+        sendPacket("Joint,'" + this.name + "', " + this.changeValue)
     }
 }
 
