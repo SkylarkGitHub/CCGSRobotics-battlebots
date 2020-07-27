@@ -31,11 +31,11 @@ class RobotServer(WebSocket):
 
                 if baseAngle < 90: # The joystick is to the right of the y-axis
                     leftWheelSpeed = baseSpeed
-                    rightWheelSpeed = int(baseSpeed * abs(math.cos((baseAngle*math.pi)/180)))
+                    rightWheelSpeed = int(baseSpeed * abs(math.sin((baseAngle*math.pi)/180)))
 
                 elif baseAngle > 90: # The joystick is to the left of the y-axis
                     rightWheelSpeed = baseSpeed
-                    leftWheelSpeed = int(baseSpeed * abs(math.cos((baseAngle*math.pi)/180)))
+                    leftWheelSpeed = int(baseSpeed * abs(math.sin((baseAngle*math.pi)/180)))
 
                 else: # The joystick is along the y-axis.
                     rightWheelSpeed = baseSpeed
