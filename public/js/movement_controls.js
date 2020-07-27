@@ -2,7 +2,7 @@ var prevPacket;
 var JoyStickPacket;
 var keyboardControls = false;
 var isJoystickActive;
-var socket = new WebSocket('ws://'+location.hostname+':9999');
+const socket = new WebSocket('ws://'+location.hostname+':9999');
 
 function MovementKey(keyID, yValue, xValue) {
     this.keyID = keyID;
