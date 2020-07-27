@@ -3,7 +3,7 @@ servo_connection = Connection(port="/dev/ttyACM0", baudrate=1000000)
 
 servo_connection.flush()
 
-def scaleValues(self, val, src, dst):
+def scaleValues(val, src, dst):
     """
     Scale the given value from the scale of src to the scale of dst.
     """
