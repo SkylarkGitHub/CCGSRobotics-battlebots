@@ -48,6 +48,8 @@ function calculateMovementPacket(){
 
     packet = convertJoyStickToLimitedPolarCoords(xSum,ySum)
     
+    if(Math.abs(packet.angle)) == 180) {packet.angle = 180;}
+    
     return "Wheels," + packet.distance + "," + packet.angle
 }
 
