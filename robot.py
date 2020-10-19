@@ -1,32 +1,27 @@
 from simple_websocket_server import WebSocketServer, WebSocket
-from functions import *
+from robot_servo_layouts import *
 import math
+import traceback
 
-# The robot is setup as a battlebot, with the wheels in their respective positions.
-robot = {
-    "name": "battlebot",
-    "front_left_wheel": 3,
-    "front_right_wheel": 2,
-    "back_left_wheel": 4,
-    "back_right_wheel": 1,
-}
+robot = battlebot
 
-# if the robot is named "battlebot", the wheels are setup using the wheelMode("servo id") function.
-if robot["name"] == "battlebot":
-    wheelMode(robot["front_left_wheel"])
-    wheelMode(robot["front_right_wheel"])
-    wheelMode(robot["back_left_wheel"])
-    wheelMode(robot["back_right_wheel"])
+for servo in robot.servos:
+    if servo.type == "wheel":
+        servo.wheelMode()
+    elif servo.type == "joint":
+        servo.jointMode()
 
 class RobotServer(WebSocket):
     def handle(self):
         # a try statement is used to prevent a data processing error from crashing the program.
         try:
-            # The baseSpeed and baseAngle are read from the incoming packet from the websocket client.
-            baseSpeed, baseAngle = map(int, self.data.split("|"))
+            if "Joint," in self.data:
+                commandtype, servoName, changeValue = self.data.split(",")
+                print(servoName,changeValue)
 
-            if robot["name"] == "battlebot":
-                # If the VirtualJoystick is below the y-axis, it changes the speed to a negative, indictaing a backwards direction.
+            elif "Wheels," in self.data:
+                # The baseSpeed and baseAngle are read from the incoming packet from the websocket client.
+                baseSpeed, baseAngle = map(int, self.data.replace("Wheels,","").split(","))
                 if baseAngle < 0:
                     baseSpeed = baseSpeed * -1
                     baseAngle = abs(baseAngle)
@@ -46,25 +41,22 @@ class RobotServer(WebSocket):
                     rightWheelSpeed = baseSpeed
                     leftWheelSpeed = baseSpeed 
 
-                # Since the servos are set to spin the same direction, the left wheels are set to spin backwards to maintain the 
-                # direction of the robot, as the servos on one side are flipped.
+                # Since the servos are set to spin the same direction, the right wheels are set to spin backwards to maintain the 
+                # direction of the robot, as the servos on one side are flipped over.
                 rightWheelSpeed *= -1
 
                 # Moves the four wheels according to the new, calculated speeds.
-                moveWheel(robot["front_left_wheel"], leftWheelSpeed)
-                moveWheel(robot["back_left_wheel"], leftWheelSpeed)
-
-                moveWheel(robot["front_right_wheel"], rightWheelSpeed)
-                moveWheel(robot["back_right_wheel"], rightWheelSpeed)
-
-                # Print() statement added for debugging purposes. Comment print statement when not debugging, since it will 
-                # significantly decrease performance, making the operation of the robot rather difficult. 
-                # print(leftWheelSpeed, rightWheelSpeed)
+                for servo in robot.servos:
+                    if servo.type == "wheel":
+                        if servo.name == "front_left_wheel" or servo.name == "back_left_wheel":
+                            servo.moveWheel(leftWheelSpeed)
+                        elif servo.name == "front_right_wheel" or servo.name == "back_right_wheel":
+                            servo.moveWheel(rightWheelSpeed)
             
         # Except statement will print out the error, preventing the program from crashing 
         # whilst still providing infomation for debuggings purposes.
         except Exception as e:
-            print(e)
+            print(traceback.format_exc())
 
     # The following two functions (connected(self) & handle_close(self)) are used to indicate the connections of clients to the websocket.
     def connected(self):
@@ -73,6 +65,6 @@ class RobotServer(WebSocket):
     def handle_close(self):
         print('Client', self.address, 'Closed.')
 
-# The websocket server is setup on port 9999 on the default address, in this case "192.168.100.1"
+# The websocket server is setup on port 9999 on the default address
 server = WebSocketServer('', 9999, RobotServer)
 server.serve_forever()

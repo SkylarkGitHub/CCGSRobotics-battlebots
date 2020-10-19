@@ -1,13 +1,13 @@
 /*
 	This code has been directly copied from: https://github.com/jeromeetienne/virtualjoystick.js.
 	
-	Benjamin Lane takes no credit for this piece of intellectual property, all credit is given to its original developer.
+	Benjamin/Skylar Lane takes no credit for this piece of intellectual property, all credit is given to its original developer.
 */
 var VirtualJoystick	= function(opts)
 {
 	opts			= opts			|| {};
 	this._container		= opts.container	|| document.body;
-	this._strokeStyle	= opts.strokeStyle	|| 'cyan';
+	this._strokeStyle	= opts.strokeStyle	|| 'hotpink';
 	this._stickEl		= opts.stickElement	|| this._buildJoystickStick();
 	this._baseEl		= opts.baseElement	|| this._buildJoystickBase();
 	this._mouseSupport	= opts.mouseSupport !== undefined ? opts.mouseSupport : false;

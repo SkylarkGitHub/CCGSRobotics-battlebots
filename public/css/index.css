@@ -2,7 +2,7 @@ body {
     overflow	: hidden;
     padding		: 0;
     margin		: 0;
-    background-color: lightgoldenrodyellow;
+    background-color: lightskyblue
 }
 
 #container {
@@ -17,6 +17,7 @@ body {
     position: absolute;
     top: 0%;
     left: 0%;
+    border: 5px solid black;
 }
 
 #camera_feed {
@@ -34,12 +35,13 @@ body {
     -ms-transform: translate(-50%,-50%);
     transform: translate(-50%,-50%);
     z-index: -100;
-    border: 5px solid darkblue;
+    
 }
 
 #camera_connection {
     width		: 640px;
     height		: 360px;
     overflow	: hidden;
+    border: 0;
 }
 
